@@ -3,6 +3,8 @@
 UPSTREAM_GIT = git://github.com/<please-user>/hacking.git
 include /usr/share/openstack-pkg-tools/pkgos.make
 
+export OSLO_PACKAGE_VERSION=$(VERSION)
+
 %:
 	dh $@  --with python2
 
