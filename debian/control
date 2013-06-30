@@ -10,9 +10,10 @@ Build-Depends: debhelper (>= 9),
  python-all (>= 2.6.6-3~),
  python-setuptools
 Build-Depends-Indep: pyflakes (>= 0.7.2),
- python-d2to1 (>= 0.2.10),
  python-coverage,
+ python-d2to1 (>= 0.2.10),
  python-fixtures,
+ python-flake8,
  python-pbr,
  python-sphinx,
  python-subunit,
@@ -28,7 +29,8 @@ Homepage: http://github.com/openstack-dev/hacking
 Package: python-hacking
 Architecture: all
 Pre-Depends: dpkg (>= 1.15.6~)
-Depends: python-d2to1 (>= 0.2.10),
+Depends: pyflakes (>= 0.7.2),
+ python-d2to1 (>= 0.2.10),
  python-flake8,
  python-pbr,
  ${misc:Depends},
