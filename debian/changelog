@@ -1,0 +1,5 @@
+python-hacking (0.5.6-1) unstable; urgency=low
+
+  * Initial release. (Closes: 714505)
+
+ -- Thomas Goirand <zigo@debian.org>  Sun, 30 Jun 2013 16:36:51 +0800
