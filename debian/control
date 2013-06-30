@@ -35,4 +35,5 @@ Depends: python-d2to1 (>= 0.2.10),
 Recommends: ${python:Recommends}
 Description: Flake8 OpenStack Hacking Guidelines Enforcement plugins
  Hacking is a set of flake8 plugins that test and enforce the OpenStack Style
- Commandments.
+ Commandments. It checks that your code matches the coding style which is
+ mandatory for contributing to OpenStack.
