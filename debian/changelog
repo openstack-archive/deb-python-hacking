@@ -1,3 +1,9 @@
+python-hacking (0.5.6-2) UNRELEASED; urgency=low
+
+  * Fixed git URL in debian/rules.
+
+ -- Thomas Goirand <zigo@debian.org>  Sat, 20 Jul 2013 22:28:28 +0800
+
 python-hacking (0.5.6-1) unstable; urgency=low
 
   * Initial release. (Closes: 714505)
