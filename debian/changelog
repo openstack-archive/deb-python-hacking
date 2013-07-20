@@ -1,5 +1,6 @@
-python-hacking (0.5.6-2) UNRELEASED; urgency=low
+python-hacking (0.6.0-1) unstable; urgency=low
 
+  * New upstream release.
   * Fixed git URL in debian/rules.
 
  -- Thomas Goirand <zigo@debian.org>  Sat, 20 Jul 2013 22:28:28 +0800
