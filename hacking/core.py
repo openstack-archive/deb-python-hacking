@@ -50,7 +50,8 @@ def flake8ext(f):
 # Error code block layout
 
 #H1xx comments
-#H2xx except
+#H20x except
+#H23x Python 2.x -> 3.x portability issues
 #H3xx imports
 #H4xx docstrings
 #H5xx dictionaries/lists
@@ -111,7 +112,7 @@ def hacking_todo_format(physical_line, tokens):
         return pos, "H101: Use TODO(NAME)"
 
 
-def _check_for_apache(start, lines):
+def _check_for_exact_apache(start, lines):
     """Check for the Apache 2.0 license header.
 
     We strip all the newlines and extra spaces so this license string
@@ -136,13 +137,14 @@ under the License."""
     # spaces.
     content = ''.join(lines[start:(start + 12)])
     content = re.sub('\#', '', content)
-    content = re.sub('\s+', ' ', content)
-    stripped_apache2 = re.sub('\s+', ' ', APACHE2)
+    content = re.sub('\s+', ' ', content).strip()
+    stripped_apache2 = re.sub('\s+', ' ', APACHE2).strip()
 
     if stripped_apache2 in content:
         return True
     else:
-        print "License '%s' != '%s'" % (stripped_apache2, content)
+        print ("<license>!=<apache2>:\n'%s' !=\n'%s'" %
+               (content, stripped_apache2))
         return False
 
 
@@ -170,7 +172,7 @@ def _project_is_apache():
 def hacking_has_license(physical_line, filename, lines, line_number):
     """Check for Apache 2.0 license.
 
-    H102
+    H102 license header not found
     """
     # don't work about init files for now
     # TODO(sdague): enforce license in init file if it's not empty of content
@@ -184,13 +186,29 @@ def hacking_has_license(physical_line, filename, lines, line_number):
             # if it's more than 10 characters in, it's probably not in the
             # header
             if 0 < line.find('Licensed under the Apache License') < 10:
-                if _check_for_apache(idx, lines):
                     license_found = True
-                else:
-                    return (idx, "H102: Apache 2.0 license header not found")
-
         if not license_found:
             return (0, "H102: Apache 2.0 license header not found")
+
+
+@flake8ext
+def hacking_has_correct_license(physical_line, filename, lines, line_number):
+    """Check for Apache 2.0 license.
+
+    H103 header does not match Apache 2.0 License notice
+    """
+    # don't work about init files for now
+    # TODO(sdague): enforce license in init file if it's not empty of content
+
+    # skip files that are < 10 lines, which isn't enough for a license to fit
+    # this allows us to handle empty files, as well as not fail on the Okay
+    # doctests.
+    if _project_is_apache() and len(lines) > 10:
+        column = physical_line.find('Licensed under the Apache License')
+        if (0 < column < 10 and not
+                _check_for_exact_apache(line_number-1, lines)):
+            return (column, "H103: Header does not match Apache 2.0 "
+                    "License notice")
 
 
 @flake8ext
@@ -221,6 +239,75 @@ def hacking_except_format_assert(logical_line):
     """
     if logical_line.startswith("self.assertRaises(Exception)"):
         yield 1, "H202: assertRaises Exception too broad"
+
+
+@flake8ext
+def hacking_python3x_except_compatible(logical_line):
+    r"""Check for except statements to be Python 3.x compatible
+
+    As of Python 3.x, the construct 'except x,y:' has been removed.
+    Use 'except x as y:' instead.
+
+
+    Okay: try:\n    pass\nexcept Exception:\n    pass
+    Okay: try:\n    pass\nexcept (Exception, AttributeError):\n    pass
+    H231: try:\n    pass\nexcept AttributeError, e:\n    pass
+    """
+
+    def is_old_style_except(logical_line):
+        return (',' in logical_line
+                and ')' not in logical_line.rpartition(',')[2])
+
+    if (logical_line.startswith("except ")
+            and logical_line.endswith(':')
+            and is_old_style_except(logical_line)):
+        yield 0, "H231: Python 3.x incompatible 'except x,y:' construct"
+
+
+@flake8ext
+def hacking_python3x_octal_literals(logical_line, tokens):
+    r"""Check for octal literals in Python 3.x compatible form.
+
+    As of Python 3.x, the construct "0755" has been removed.
+    Use "0o755" instead".
+
+
+    Okay: f(0o755)
+    Okay: 'f(0755)'
+    Okay: f(755)
+    Okay: f(0)
+    Okay: f(000)
+    Okay: MiB = 1.0415
+    H232: f(0755)
+    """
+
+    for tokentype, text, _, _, _ in tokens:
+        if tokentype == tokenize.NUMBER:
+            match = re.match(r"0+([1-9]\d*)", text)
+            if match:
+                yield 0, ("H232: Python 3.x incompatible octal %s should be "
+                          "written as 0o%s " %
+                          (match.group(0)[1:], match.group(1)))
+
+
+@flake8ext
+def hacking_python3x_print_function(logical_line):
+    r"""Check that all occurrences look like print functions, not
+        print operator.
+
+    As of Python 3.x, the print operator has been removed.
+
+
+    Okay: print(msg)
+    Okay: print (msg)
+    H233: print msg
+    H233: print >>sys.stderr, "hello"
+    H233: print msg,
+    """
+
+    for match in re.finditer(r"\bprint\s+[^\(]", logical_line):
+        yield match.start(0), (
+            "H233: Python 3.x incompatible use of print operator")
 
 
 modules_cache = dict((mod, True) for mod in tuple(sys.modules.keys())
@@ -281,7 +368,7 @@ def hacking_import_rules(logical_line, physical_line, filename):
             try:
                 # NOTE(vish): handle namespace modules
                 __import__(mod)
-            except ImportError, exc:
+            except ImportError as exc:
                 # NOTE(vish): the import error might be due
                 #             to a missing dependency
                 missing = str(exc).split()[-1]
@@ -499,6 +586,28 @@ def hacking_docstring_multiline_start(physical_line, previous_logical, tokens):
 
 
 @flake8ext
+def hacking_no_locals(logical_line, physical_line, tokens):
+    """Do not use locals() for string formatting.
+
+    Okay: 'locals()'
+    Okay: 'locals'
+    Okay: locals()
+    Okay: print(locals())
+    H501: print("%(something)" % locals())
+    Okay: print("%(something)" % locals())  # noqa
+    """
+    if pep8.noqa(physical_line):
+        return
+    for_formatting = False
+    for token_type, text, start, _, _ in tokens:
+        if text == "%" and token_type == tokenize.OP:
+            for_formatting = True
+        if (for_formatting and token_type == tokenize.NAME and text ==
+                "locals" and "locals()" in logical_line):
+            yield (start[1], "H501: Do not use locals() for string formatting")
+
+
+@flake8ext
 def hacking_no_cr(physical_line):
     r"""Check that we only use newlines not carriage returns.
 
@@ -678,7 +787,13 @@ class GitCheck(GlobalCheck):
     """Base-class for Git related checks."""
 
     def _get_commit_title(self):
-        if not os.path.exists('.git'):
+        # Check if we're inside a git checkout
+        subp = subprocess.Popen(
+            ['git', 'rev-parse', '--show-toplevel'],
+            stdout=subprocess.PIPE)
+        gitdir = subp.communicate()[0].rstrip()
+
+        if not os.path.exists(gitdir):
             return None
 
         #Get title of most recent commit
@@ -686,6 +801,7 @@ class GitCheck(GlobalCheck):
             ['git', 'log', '--no-merges', '--pretty=%s', '-1'],
             stdout=subprocess.PIPE)
         title = subp.communicate()[0]
+
         if subp.returncode:
             raise Exception("git log failed with code %s" % subp.returncode)
         return title
@@ -737,6 +853,26 @@ class OnceGitCheckCommitTitleLength(GitCheck):
             return (
                 1, 0,
                 "H802: git commit title ('%s') should be under 50 chars"
+                % title.strip(),
+                self.name)
+
+
+class OnceGitCheckCommitTitlePeriodEnding(GitCheck):
+    """Check the end of the first line of git commit messages.
+
+    The first line of git commit message should not end with a period.
+
+    H803 Commit message should not end with a period
+    """
+    name = "GitCheckCommitTitlePeriodEnding"
+
+    def run_once(self):
+        title = self._get_commit_title()
+
+        if title and title.rstrip().endswith('.'):
+            return (
+                1, 0,
+                "H803: git commit title ('%s') should not end with period"
                 % title.strip(),
                 self.name)
 

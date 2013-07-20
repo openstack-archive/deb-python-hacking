@@ -152,6 +152,8 @@ Example::
       },
   }
 
+Do not use ``locals()`` for formatting strings, it is not clear as using
+explicit dictionaries and can hide errors during refactoring.
 
 Calling Methods
 ---------------
@@ -210,6 +212,29 @@ Example::
     LOG.error(msg % {"s_id": "1234", "m_key": "imageId"})
 
 
+Python 3.x compatibility
+------------------------
+OpenStack code should become Python 3.x compatible. That means all Python 2.x-only
+constructs or dependencies should be avoided. An example is
+
+    except x,y:
+
+Use
+
+    except x as y:
+
+instead. Also Python 3.x has become more strict regarding octal string
+literals. Use "0o755" instead of "0755". Similarly, explicit use of long
+literals (01234L) should be avoided.
+
+Other Python 3.x compatibility issues, like e.g. print operator
+can be avoided in new code by using
+
+    from __future__ import print_function
+
+at the top of your module.
+
+
 Creating Unit Tests
 -------------------
 For every new feature, unit tests should be created that both test and
@@ -234,6 +259,7 @@ The copy of the code should never be directly modified here. Please
 always update oslo-incubator first and then run the script to copy
 the changes across.
 
+
 OpenStack Trademark
 -------------------
 
@@ -241,6 +267,25 @@ OpenStack is a registered trademark of the OpenStack Foundation, and uses the
 following capitalization:
 
    OpenStack
+
+
+OpenStack Licensing
+-------------------
+
+Newly contributed Source Code should be licensed under the Apache 2.0 license.
+All source files should have the following header:
+
+    #    Licensed under the Apache License, Version 2.0 (the "License"); you may
+    #    not use this file except in compliance with the License. You may obtain
+    #    a copy of the License at
+    #
+    #         http://www.apache.org/licenses/LICENSE-2.0
+    #
+    #    Unless required by applicable law or agreed to in writing, software
+    #    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    #    License for the specific language governing permissions and limitations
+    #    under the License.
 
 
 Commit Messages
@@ -253,7 +298,8 @@ readable. Follow these guidelines:
 
   The first line of the commit message should provide an accurate
   description of the change, not just a reference to a bug or
-  blueprint. It must be followed by a single blank line.
+  blueprint. It must not end with a period and must be followed by
+  a single blank line.
 
   If the change relates to a specific driver (libvirt, xenapi, qpid, etc...),
   begin the first line of the commit message with the driver name, lowercased,
