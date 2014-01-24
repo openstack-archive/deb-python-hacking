@@ -1,6 +1,8 @@
 python-hacking (0.8.0-1) unstable; urgency=medium
 
   * New upstream release.
+  * Ran wrap-and-sort.
+  * Standard-Version: is now 3.9.5.
 
  -- Thomas Goirand <zigo@debian.org>  Fri, 24 Jan 2014 16:30:53 +0800
 

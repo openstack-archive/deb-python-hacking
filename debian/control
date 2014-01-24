@@ -3,25 +3,25 @@ Section: python
 Priority: optional
 Maintainer: PKG OpenStack <openstack-devel@lists.alioth.debian.org>
 Uploaders: Julien Danjou <acid@debian.org>,
- Thomas Goirand <zigo@debian.org>,
- Mehdi Abaakouk <sileht@sileht.net>
+           Thomas Goirand <zigo@debian.org>,
+           Mehdi Abaakouk <sileht@sileht.net>
 Build-Depends: debhelper (>= 9),
- openstack-pkg-tools,
- python-all (>= 2.6.6-3~),
- python-setuptools
+               openstack-pkg-tools,
+               python-all (>= 2.6.6-3~),
+               python-setuptools
 Build-Depends-Indep: pyflakes (>= 0.7.2),
- python-coverage,
- python-d2to1 (>= 0.2.10),
- python-fixtures,
- python-flake8,
- python-pbr,
- python-sphinx,
- python-subunit,
- python-testrepository (>= 0.0.13),
- python-testscenarios,
- python-testtools (>= 0.9.27),
- testrepository (>= 0.0.13)
-Standards-Version: 3.9.4
+                     python-coverage,
+                     python-d2to1 (>= 0.2.10),
+                     python-fixtures,
+                     python-flake8,
+                     python-pbr,
+                     python-sphinx,
+                     python-subunit,
+                     python-testrepository (>= 0.0.13),
+                     python-testscenarios,
+                     python-testtools (>= 0.9.27),
+                     testrepository (>= 0.0.13)
+Standards-Version: 3.9.5
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=openstack/python-hacking.git
 Vcs-Git: git://anonscm.debian.org/openstack/python-hacking.git
 Homepage: http://github.com/openstack-dev/hacking
@@ -30,11 +30,11 @@ Package: python-hacking
 Architecture: all
 Pre-Depends: dpkg (>= 1.15.6~)
 Depends: pyflakes (>= 0.7.2),
- python-d2to1 (>= 0.2.10),
- python-flake8,
- python-pbr,
- ${misc:Depends},
- ${python:Depends}
+         python-d2to1 (>= 0.2.10),
+         python-flake8,
+         python-pbr,
+         ${misc:Depends},
+         ${python:Depends}
 Recommends: ${python:Recommends}
 Description: Flake8 OpenStack Hacking Guidelines Enforcement plugins
  Hacking is a set of flake8 plugins that test and enforce the OpenStack Style
