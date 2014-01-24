@@ -21,7 +21,6 @@
 Built as a sets of pep8 checks using flake8.
 """
 
-import ConfigParser
 import gettext
 import imp
 import logging
@@ -32,14 +31,22 @@ import sys
 import tokenize
 import traceback
 
-import d2to1.util
+import pbr.util
 import pep8
+
+from hacking import config
 
 # Don't need this for testing
 logging.disable('LOG')
 
 # Import tests need to inject _ properly into the builtins
-gettext.install('hacking', unicode=1)
+kwargs = {}
+if sys.version_info[0] < 3:
+    # In Python2, eusnure that the _() that gets installed into built-ins
+    # always returns unicodes. This matches the default behavior under Python
+    # 3, although the keyword arguement is not present in the Python 3 API.
+    kwargs['unicode'] = True
+gettext.install('hacking', **kwargs)
 
 
 def flake8ext(f):
@@ -60,8 +67,18 @@ def flake8ext(f):
 #H8xx git commit messages
 #H9xx other
 
-IMPORT_EXCEPTIONS = ['sqlalchemy', 'migrate', 'nova.db.sqlalchemy.session',
-                     'nova.db.sqlalchemy.migration.versioning_api']
+
+CONF = config.Config('hacking')
+
+
+DEFAULT_IMPORT_EXCEPTIONS = [
+    'sqlalchemy',
+    'migrate',
+]
+
+IMPORT_EXCEPTIONS = CONF.get_multiple('import_exceptions', default=[])
+IMPORT_EXCEPTIONS += DEFAULT_IMPORT_EXCEPTIONS
+
 # Paste is missing a __init__ in top level directory
 START_DOCSTRING_TRIPLE = ['u"""', 'r"""', '"""', "u'''", "r'''", "'''"]
 END_DOCSTRING_TRIPLE = ['"""', "'''"]
@@ -185,7 +202,7 @@ def hacking_has_license(physical_line, filename, lines, line_number):
         for idx, line in enumerate(lines):
             # if it's more than 10 characters in, it's probably not in the
             # header
-            if 0 < line.find('Licensed under the Apache License') < 10:
+            if 0 <= line.find('Licensed under the Apache License') < 10:
                     license_found = True
         if not license_found:
             return (0, "H102: Apache 2.0 license header not found")
@@ -233,16 +250,17 @@ def hacking_except_format_assert(logical_line):
     OpenStack HACKING guide recommends not using assertRaises(Exception...):
     Do not use overly broad Exception type
 
-    Okay: self.assertRaises(NovaException)
-    Okay: self.assertRaises(ExceptionStrangeNotation)
+    Okay: self.assertRaises(NovaException, foo)
+    Okay: self.assertRaises(ExceptionStrangeNotation, foo)
+    H202: self.assertRaises(Exception, foo)
     H202: self.assertRaises(Exception)
     """
-    if logical_line.startswith("self.assertRaises(Exception)"):
+    if re.match(r"self\.assertRaises\(Exception[,\)]", logical_line):
         yield 1, "H202: assertRaises Exception too broad"
 
 
 @flake8ext
-def hacking_python3x_except_compatible(logical_line):
+def hacking_python3x_except_compatible(logical_line, physical_line):
     r"""Check for except statements to be Python 3.x compatible
 
     As of Python 3.x, the construct 'except x,y:' has been removed.
@@ -252,7 +270,10 @@ def hacking_python3x_except_compatible(logical_line):
     Okay: try:\n    pass\nexcept Exception:\n    pass
     Okay: try:\n    pass\nexcept (Exception, AttributeError):\n    pass
     H231: try:\n    pass\nexcept AttributeError, e:\n    pass
+    Okay: try:\n    pass\nexcept AttributeError, e:  # noqa\n    pass
     """
+    if pep8.noqa(physical_line):
+        return
 
     def is_old_style_except(logical_line):
         return (',' in logical_line
@@ -291,7 +312,7 @@ def hacking_python3x_octal_literals(logical_line, tokens):
 
 
 @flake8ext
-def hacking_python3x_print_function(logical_line):
+def hacking_python3x_print_function(logical_line, physical_line):
     r"""Check that all occurrences look like print functions, not
         print operator.
 
@@ -300,14 +321,50 @@ def hacking_python3x_print_function(logical_line):
 
     Okay: print(msg)
     Okay: print (msg)
+    Okay: print msg  # noqa
     H233: print msg
     H233: print >>sys.stderr, "hello"
     H233: print msg,
     """
-
+    if pep8.noqa(physical_line):
+        return
     for match in re.finditer(r"\bprint\s+[^\(]", logical_line):
         yield match.start(0), (
             "H233: Python 3.x incompatible use of print operator")
+
+
+@flake8ext
+def hacking_no_assert_equals(logical_line, tokens):
+    r"""assert(Not)Equals() is deprecated, use assert(Not)Equal instead.
+
+    Okay: self.assertEqual(0, 0)
+    Okay: self.assertNotEqual(0, 1)
+    H234: self.assertEquals(0, 0)
+    H234: self.assertNotEquals(0, 1)
+    """
+
+    for token_type, text, start_index, _, _ in tokens:
+
+        if token_type == tokenize.NAME:
+            if text == "assertEquals" or text == "assertNotEquals":
+                yield (start_index[1],
+                       "H234: %s is deprecated, use %s" % (text, text[:-1]))
+
+
+@flake8ext
+def hacking_no_assert_underscore(logical_line, tokens):
+    r"""assert_() is deprecated, use assertTrue instead.
+
+    Okay: self.assertTrue(foo)
+    H235: self.assert_(foo)
+    """
+
+    for token_type, text, start_index, _, _ in tokens:
+
+        if token_type == tokenize.NAME and text == "assert_":
+            yield (
+                start_index[1],
+                "H235: assert_ is deprecated, use assertTrue")
 
 
 modules_cache = dict((mod, True) for mod in tuple(sys.modules.keys())
@@ -567,10 +624,10 @@ def hacking_docstring_multiline_end(physical_line, previous_logical, tokens):
 
 @flake8ext
 def hacking_docstring_multiline_start(physical_line, previous_logical, tokens):
-    r"""Check multi line docstring start with summary.
+    r"""Check multi line docstring starts immediately with summary.
 
     OpenStack HACKING guide recommendation for docstring:
-    Docstring should start with A multi line docstring has a one-line summary
+    Docstring should start with a one-line summary, less than 80 characters.
 
     Okay: '''foobar\nfoo\nbar\n'''
     Okay: def foo():\n    a = '''\nnot\na docstring\n'''
@@ -582,7 +639,7 @@ def hacking_docstring_multiline_start(physical_line, previous_logical, tokens):
         if len(tokens) == 0 and pos != -1 and len(physical_line) == pos + 4:
             if physical_line.strip() in START_DOCSTRING_TRIPLE:
                 return (pos, "H404: multi line docstring "
-                        "should start with a summary")
+                        "should start without a leading new line")
 
 
 @flake8ext
@@ -605,21 +662,6 @@ def hacking_no_locals(logical_line, physical_line, tokens):
         if (for_formatting and token_type == tokenize.NAME and text ==
                 "locals" and "locals()" in logical_line):
             yield (start[1], "H501: Do not use locals() for string formatting")
-
-
-@flake8ext
-def hacking_no_cr(physical_line):
-    r"""Check that we only use newlines not carriage returns.
-
-    Okay: import os\nimport sys
-    # pep8 doesn't yet replace \r in strings, will work on an
-    # upstream fix
-    H601 import os\r\nimport sys
-    """
-    #TODO(jogo): This should not be in H6xx, it should be in H9xx
-    pos = physical_line.find('\r')
-    if pos != -1 and pos == (len(physical_line) - 2):
-        return (pos, "H601: Windows style line endings not allowed in code")
 
 
 FORMAT_RE = re.compile("%(?:"
@@ -714,7 +756,7 @@ def hacking_localization_strings(logical_line, tokens):
     gen = check_i18n()
     next(gen)
     try:
-        map(gen.send, tokens)
+        list(map(gen.send, tokens))
         gen.close()
     except LocalizationError as e:
         yield e.args
@@ -755,6 +797,20 @@ def hacking_not_in(logical_line):
                        "operator for collection membership evaluation")
 
 
+@flake8ext
+def hacking_no_cr(physical_line):
+    r"""Check that we only use newlines not carriage returns.
+
+    Okay: import os\nimport sys
+    # pep8 doesn't yet replace \r in strings, will work on an
+    # upstream fix
+    H903 import os\r\nimport sys
+    """
+    pos = physical_line.find('\r')
+    if pos != -1 and pos == (len(physical_line) - 2):
+        return (pos, "H903: Windows style line endings not allowed in code")
+
+
 class GlobalCheck(object):
     """Base class for checks that should be run only once."""
 
@@ -788,10 +844,14 @@ class GitCheck(GlobalCheck):
 
     def _get_commit_title(self):
         # Check if we're inside a git checkout
-        subp = subprocess.Popen(
-            ['git', 'rev-parse', '--show-toplevel'],
-            stdout=subprocess.PIPE)
-        gitdir = subp.communicate()[0].rstrip()
+        try:
+            subp = subprocess.Popen(
+                ['git', 'rev-parse', '--show-toplevel'],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            gitdir = subp.communicate()[0].rstrip()
+        except OSError:
+            # "git" was not found
+            return None
 
         if not os.path.exists(gitdir):
             return None
@@ -804,7 +864,7 @@ class GitCheck(GlobalCheck):
 
         if subp.returncode:
             raise Exception("git log failed with code %s" % subp.returncode)
-        return title
+        return title.decode('utf-8')
 
 
 class OnceGitCheckCommitTitleBug(GitCheck):
@@ -839,7 +899,7 @@ class OnceGitCheckCommitTitleBug(GitCheck):
 class OnceGitCheckCommitTitleLength(GitCheck):
     """Check git commit message length.
 
-    HACKING.rst recommends commit titles 50 chars or less, but enforces
+    HACKING recommends commit titles 50 chars or less, but enforces
     a 72 character limit
 
     H802 Title limited to 72 chars
@@ -849,7 +909,7 @@ class OnceGitCheckCommitTitleLength(GitCheck):
     def run_once(self):
         title = self._get_commit_title()
 
-        if title and len(title.decode('utf-8')) > 72:
+        if title and len(title) > 72:
             return (
                 1, 0,
                 "H802: git commit title ('%s') should be under 50 chars"
@@ -883,25 +943,19 @@ class ProxyChecks(GlobalCheck):
 
     @classmethod
     def add_options(cls, parser):
-        # Abusing this method because of when it gets called
-        if not os.path.exists('tox.ini'):
-            return
-        tox_ini = ConfigParser.RawConfigParser()
-        tox_ini.read('tox.ini')
-        if not tox_ini.has_section('hacking'):
-            return
-
         # We're looking for local checks, so we need to include the local
         # dir in the search path
         sys.path.append('.')
-        if tox_ini.has_option('hacking', 'local-check'):
-            for check_path in set(
-                    tox_ini.get('hacking', 'local-check').split(",")):
-                if check_path.strip():
-                    checker = d2to1.util.resolve_name(check_path)
-                    pep8.register_check(checker)
-        if tox_ini.has_option('hacking', 'local-check-factory'):
-            factory = d2to1.util.resolve_name(
-                tox_ini.get('hacking', 'local-check-factory'))
+
+        local_check = CONF.get_multiple('local-check', default=[])
+        for check_path in set(local_check):
+            if check_path.strip():
+                checker = pbr.util.resolve_name(check_path)
+                pep8.register_check(checker)
+
+        local_check_fact = CONF.get('local-check-factory')
+        if local_check_fact:
+            factory = pbr.util.resolve_name(local_check_fact)
             factory(pep8.register_check)
+
         sys.path.pop()
