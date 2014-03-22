@@ -229,7 +229,7 @@ def hacking_has_correct_license(physical_line, filename, lines, line_number):
 
 
 @flake8ext
-def hacking_except_format(logical_line):
+def hacking_except_format(logical_line, physical_line):
     r"""Check for 'except:'.
 
     OpenStack HACKING guide recommends not using except:
@@ -238,13 +238,17 @@ def hacking_except_format(logical_line):
     Okay: try:\n    pass\nexcept Exception:\n    pass
     H201: try:\n    pass\nexcept:\n    pass
     H201: except:
+    Okay: try:\n    pass\nexcept:  # noqa\n    pass
     """
+    if pep8.noqa(physical_line):
+        return
+
     if logical_line.startswith("except:"):
         yield 6, "H201: no 'except:' at least use 'except Exception:'"
 
 
 @flake8ext
-def hacking_except_format_assert(logical_line):
+def hacking_except_format_assert(logical_line, physical_line):
     r"""Check for 'assertRaises(Exception'.
 
     OpenStack HACKING guide recommends not using assertRaises(Exception...):
@@ -254,7 +258,12 @@ def hacking_except_format_assert(logical_line):
     Okay: self.assertRaises(ExceptionStrangeNotation, foo)
     H202: self.assertRaises(Exception, foo)
     H202: self.assertRaises(Exception)
+    Okay: self.assertRaises(Exception)  # noqa
+    Okay: self.assertRaises(Exception, foo)  # noqa
     """
+    if pep8.noqa(physical_line):
+        return
+
     if re.match(r"self\.assertRaises\(Exception[,\)]", logical_line):
         yield 1, "H202: assertRaises Exception too broad"
 
