@@ -1,3 +1,11 @@
+python-hacking (0.8.1-1) experimental; urgency=low
+
+  * New upstream release.
+  * Uploading to experimental.
+  * Added support for Python 3.
+
+ -- Thomas Goirand <zigo@debian.org>  Fri, 21 Mar 2014 19:32:24 +0800
+
 python-hacking (0.8.0-1) unstable; urgency=medium
 
   * New upstream release.

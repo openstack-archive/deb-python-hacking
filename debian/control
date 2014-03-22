@@ -10,17 +10,17 @@ Build-Depends: debhelper (>= 9),
                python-all (>= 2.6.6-3~),
                python-setuptools
 Build-Depends-Indep: pyflakes (>= 0.7.2),
-                     python-coverage,
-                     python-d2to1 (>= 0.2.10),
-                     python-fixtures,
+                     python-coverage (>= 3.6),
+                     python-fixtures (>= 0.3.14),
                      python-flake8,
                      python-pbr,
-                     python-sphinx,
+                     python-sphinx (>= 1.1.2),
                      python-subunit,
                      python-testrepository (>= 0.0.13),
-                     python-testscenarios,
-                     python-testtools (>= 0.9.27),
-                     testrepository (>= 0.0.13)
+                     python-testscenarios (>= 0.4),
+                     python-testtools (>= 0.9.32),
+                     testrepository (>= 0.0.17),
+                     subunit
 Standards-Version: 3.9.5
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=openstack/python-hacking.git
 Vcs-Git: git://anonscm.debian.org/openstack/python-hacking.git
@@ -29,14 +29,49 @@ Homepage: http://github.com/openstack-dev/hacking
 Package: python-hacking
 Architecture: all
 Pre-Depends: dpkg (>= 1.15.6~)
-Depends: pyflakes (>= 0.7.2),
-         python-d2to1 (>= 0.2.10),
+Depends: pep8 (>=1.4.5),
+         pyflakes (>= 0.7.2),
          python-flake8,
-         python-pbr,
+         python-pbr (>= 0.5.21),
+         python-pep8,
+         python-six (>= 1.4.1),
          ${misc:Depends},
          ${python:Depends}
 Recommends: ${python:Recommends}
-Description: Flake8 OpenStack Hacking Guidelines Enforcement plugins
+Description: Flake8 OpenStack Hacking Guidelines Enforcement plugins - Python 2.x
  Hacking is a set of flake8 plugins that test and enforce the OpenStack Style
  Commandments. It checks that your code matches the coding style which is
  mandatory for contributing to OpenStack.
+ .
+ This package provides the Python 2.x module.
+
+Package: python3-hacking
+Architecture: all
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: pep8 (>=1.4.5),
+         pyflakes (>= 0.7.2),
+         python3-flake8,
+         python3-pbr (>= 0.5.21),
+         python3-pep8,
+         python3-six (>= 1.4.1),
+         ${misc:Depends},
+         ${python:Depends}
+Recommends: ${python3:Recommends}
+Description: Flake8 OpenStack Hacking Guidelines Enforcement plugins - Python 3.x
+ Hacking is a set of flake8 plugins that test and enforce the OpenStack Style
+ Commandments. It checks that your code matches the coding style which is
+ mandatory for contributing to OpenStack.
+ .
+ This package provides the Python 3.x module.
+
+Package: python-hacking-doc
+Section: doc
+Architecture: all
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: ${sphinxdoc:Depends}, ${misc:Depends}
+Description: Flake8 OpenStack Hacking Guidelines Enforcement plugins - doc
+ Hacking is a set of flake8 plugins that test and enforce the OpenStack Style
+ Commandments. It checks that your code matches the coding style which is
+ mandatory for contributing to OpenStack.
+ .
+ This package provides the documentation.
