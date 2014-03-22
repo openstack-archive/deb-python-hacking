@@ -1,0 +1,17 @@
+Description: Allow greater versions for both pep8 and flake8
+Author: Thomas Goirand <zigo@debian.org>
+Forwarded: not-needed
+Last-Update: 2014-03-22
+
+--- python-hacking-0.8.1.orig/requirements.txt
++++ python-hacking-0.8.1/requirements.txt
+@@ -1,7 +1,7 @@
+ pbr>=0.5.21,<1.0
+ 
+-pep8==1.4.5
++pep8>=1.4.5
+ pyflakes>=0.7.2,<0.7.4
+-flake8==2.0
++flake8>=2.0
+ 
+ six>=1.4.1
