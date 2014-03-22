@@ -36,7 +36,6 @@ Depends: pep8 (>=1.4.5),
          pyflakes (>= 0.7.2),
          python-flake8,
          python-pbr (>= 0.5.21),
-         python-pep8,
          python-six (>= 1.4.1),
          ${misc:Depends},
          ${python:Depends}
