@@ -11,7 +11,6 @@ export OSLO_PACKAGE_VERSION=$(VERSION)
 export http_proxy=127.0.0.1:9
 export https_proxy=127.0.0.1:9
 
-
 %:
 	dh $@ --buildsystem=python_distutils --with python2,python3,sphinxdoc
 
