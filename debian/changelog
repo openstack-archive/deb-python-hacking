@@ -1,3 +1,9 @@
+python-hacking (0.8.1-2) experimental; urgency=medium
+
+  * Added missing build-depends: python3-pbr.
+
+ -- Thomas Goirand <zigo@debian.org>  Sun, 23 Mar 2014 02:57:34 +0000
+
 python-hacking (0.8.1-1) experimental; urgency=low
 
   * New upstream release.
