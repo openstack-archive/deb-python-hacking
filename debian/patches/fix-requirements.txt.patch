@@ -1,4 +1,4 @@
-Description: Allow greater versions for both pep8 and flake8
+Description: Allow greater versions for both pep8, flake8 and pyflakes
 Author: Thomas Goirand <zigo@debian.org>
 Forwarded: not-needed
 Last-Update: 2014-03-22
@@ -9,9 +9,10 @@ Last-Update: 2014-03-22
  pbr>=0.5.21,<1.0
  
 -pep8==1.4.5
-+pep8>=1.4.5
- pyflakes>=0.7.2,<0.7.4
+-pyflakes>=0.7.2,<0.7.4
 -flake8==2.0
++pep8>=1.4.5
++pyflakes>=0.7.2
 +flake8>=2.0
  
  six>=1.4.1
