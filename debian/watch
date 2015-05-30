@@ -1,3 +1,2 @@
 version=3
-http://pypi.python.org/packages/source/h/hacking hacking-(.*).tar.gz
-
+http://pypi.debian.net/hacking/hacking-(.*).tar.gz
