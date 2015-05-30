@@ -18,10 +18,11 @@ import re
 
 from flake8 import engine
 import pep8
+import pkg_resources
+import six
+import testscenarios
 from testtools import content
 from testtools import matchers
-
-import testscenarios
 
 import hacking
 import hacking.tests
@@ -67,11 +68,18 @@ def _get_lines(check):
 
 def load_tests(loader, tests, pattern):
 
-    flake8_style = engine.get_style_guide(parse_argv=False, ignore='F')
+    flake8_style = engine.get_style_guide(parse_argv=False,
+                                          # Ignore H104 otherwise it's
+                                          # raised on doctests.
+                                          ignore=('F', 'H104'))
     options = flake8_style.options
 
-    for name, check in hacking.core.__dict__.items():
-        if not name.startswith("hacking_"):
+    for entry in pkg_resources.iter_entry_points('flake8.extension'):
+        if not entry.module_name.startswith('hacking.'):
+            continue
+        check = entry.load()
+        name = entry.attrs[0]
+        if check.skip_on_py3 and six.PY3:
             continue
         for (lineno, (raw, (code, source))) in enumerate(_get_lines(check)):
             lines = [part.replace(r'\t', '\t') + '\n'

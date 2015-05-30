@@ -4,13 +4,22 @@ Introduction
 hacking is a set of flake8 plugins that test and enforce the `OpenStack
 Style Guidlines <http://docs.openstack.org/developer/hacking>`_.
 
+Installation
+============
+
+hacking is available from pypi, so just run:
+
+  ``pip install hacking``
+
+This will install ``flake8`` with the ``hacking`` and ``pyflake`` plugins
+
 Origin
 ======
 
 Most of the additional style guidelines that OpenStack has taken on came from
 the Google Python Style Guide.
 
-  http://google-styleguide.googlecode.com/svn/trunk/pyguide.html
+- http://google-styleguide.googlecode.com/svn/trunk/pyguide.html
 
 Since then, a few more OpenStack specific ones have been added or modified.
 
@@ -30,15 +39,15 @@ Adding additional checks
 
 Each check is a pep8 plugin so read
 
-   https://github.com/jcrocholl/pep8/blob/master/docs/developer.rst#contribute
+- https://github.com/jcrocholl/pep8/blob/master/docs/developer.rst#contribute
 
 Requirements
 ------------
 - The check must already have community support. We do not want to dictate style, only enforce it.
 - The canonical source of the OpenStack Style Guidelines is
-  `doc/source/index.rst
+  `HACKING.rst
   <http://docs.openstack.org/developer/hacking>`_, and hacking just enforces
-  them; so when adding a new check, it must be in docs/source/index.rst
+  them; so when adding a new check, it must be in ``HACKING.rst``
 - False negatives are ok, but false positives are not
 - Cannot be project specific, project specific checks should be `Local Checks`_
 - Docstring tests
@@ -54,7 +63,9 @@ to run in two different ways. They can be registered individually, or with
 a factory function.
 
 For individual registration, put a comma separated list of pep8 compatible
-check functions into the hacking section of tox.ini. Like
+check functions into the hacking section of tox.ini. E.g.:
+
+.. code-block:: ini
 
   [hacking]
   local-check = nova.tests.hacking.bad_code_is_terrible
@@ -63,6 +74,8 @@ Alternately, you can specify the location of a callable that will be called
 at registration time and will be passed the registration function. The callable
 should expect to call the passed in function on everything if wants to
 register. Such as:
+
+.. code-block:: ini
 
   [hacking]
   local-check-factory = nova.tests.hacking.factory
