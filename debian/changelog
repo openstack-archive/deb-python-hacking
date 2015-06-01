@@ -1,3 +1,12 @@
+python-hacking (0.10.2-1) UNRELEASED; urgency=medium
+
+  * New upstream release:
+    - d/control: Align version requirements with upstream.
+    - d/p/no-intersphinx.patch: Dropped no longer needed.
+    - d/p/fix-requirements.txt.patch: Refresh, allow use of flake8 2.2.2.
+
+ -- James Page <james.page@ubuntu.com>  Mon, 01 Jun 2015 14:26:41 +0100
+
 python-hacking (0.9.2-1) unstable; urgency=medium
 
   * New upstream version.
