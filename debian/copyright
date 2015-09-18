@@ -6,7 +6,7 @@ Files: debian/*
 Copyright: (c) 2013, Thomas Goirand <zigo@debian.org>
 License: Apache-2
 
-Files: doc/source/static/nature.css 
+Files: doc/source/static/nature.css
 Copyright: (c) 2007-2011, the Sphinx team
 License: BSD-2-clause
 

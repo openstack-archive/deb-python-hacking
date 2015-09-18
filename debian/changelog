@@ -1,3 +1,9 @@
+python-hacking (0.9.2-2) unstable; urgency=medium
+
+  * Fixed too restrictive (build-)depends (Closes: #799312).
+
+ -- Thomas Goirand <zigo@debian.org>  Fri, 18 Sep 2015 07:17:41 +0000
+
 python-hacking (0.9.2-1) unstable; urgency=medium
 
   * New upstream version.
