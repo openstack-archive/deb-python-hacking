@@ -1,6 +1,8 @@
 python-hacking (0.10.2-3) experimental; urgency=medium
 
   * Fixed (build-)dependencies which where quite wrong.
+  * Removed doc/source/static/nature.css from debian/copyright (it's gone from
+    upstream source code).
 
  -- Thomas Goirand <zigo@debian.org>  Tue, 22 Sep 2015 15:21:08 +0200
 
