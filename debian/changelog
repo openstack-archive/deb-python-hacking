@@ -1,9 +1,27 @@
-python-hacking (0.9.2-2) unstable; urgency=medium
+python-hacking (0.10.2-3) experimental; urgency=medium
 
-  * Fixed too restrictive (build-)depends (Closes: #799312).
-  * Added fix to pbr upper bound restriction in requirements.txt.
+  * Fixed (build-)dependencies which where quite wrong.
+  * Removed doc/source/static/nature.css from debian/copyright (it's gone from
+    upstream source code).
 
- -- Thomas Goirand <zigo@debian.org>  Fri, 18 Sep 2015 07:17:41 +0000
+ -- Thomas Goirand <zigo@debian.org>  Tue, 22 Sep 2015 15:21:08 +0200
+
+python-hacking (0.10.2-2) experimental; urgency=medium
+
+  * Team upload.
+  * d/control: Drop upper version boundary for pbr, no longer required.
+
+ -- James Page <james.page@ubuntu.com>  Tue, 02 Jun 2015 09:41:22 +0100
+
+python-hacking (0.10.2-1) experimental; urgency=medium
+
+  * Team upload.
+  * New upstream release:
+    - d/control: Align version requirements with upstream.
+    - d/p/no-intersphinx.patch: Dropped no longer needed.
+    - d/p/fix-requirements.txt.patch: Refresh, allow use of flake8 2.2.2.
+
+ -- James Page <james.page@ubuntu.com>  Mon, 01 Jun 2015 14:59:11 +0100
 
 python-hacking (0.9.2-1) unstable; urgency=medium
 

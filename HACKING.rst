@@ -1,16 +1,30 @@
 OpenStack Style Guidelines
 ==========================
 
+OpenStack has a set of style guidelines for clarity. OpenStack is a
+very large code base (over 1 Million lines of python), spanning dozens
+of git trees, with over a thousand developers contributing every 12
+months. As such common style helps developers understand code in
+reviews, move between projects smoothly, and overall make the code
+more maintainable.
+
+
+Step 0
+------
+
 - Step 1: Read http://www.python.org/dev/peps/pep-0008/
 - Step 2: Read http://www.python.org/dev/peps/pep-0008/ again
 - Step 3: Read on
 
+
 General
 -------
 - [H903] Use only UNIX style newlines (``\n``), not Windows style (``\r\n``)
-- [H904] Wrap long lines in parentheses and not a backslash for line continuation.
+- It is prefered to wrap long lines in parentheses and not a backslash
+  for line continuation.
 - [H201] Do not write ``except:``, use ``except Exception:`` at the very least
 - [H101] Include your name with TODOs as in ``# TODO(yourname)``
+- [H105] Don't use author tags.
 - Do not shadow a built-in or reserved word. Example::
 
     def list():
@@ -27,12 +41,12 @@ General
 
 Imports
 -------
-- [H302] Do not import objects, only modules (*)
+- Do not import objects, only modules (*)
 - [H301] Do not import more than one module per line (*)
 - [H303] Do not use wildcard ``*`` import (*)
 - [H304] Do not make relative imports
-- Order your imports by the full module path
-- [H305 H306 H307] Organize your imports according to the `Import order
+- [H306] Order your imports by the full module path
+- Organize your imports according to the `Import order
   template`_ and `Real-world Import Order Examples`_ below.
 
 (*) exceptions are:
@@ -70,6 +84,7 @@ Example::
   import webob.exc
 
   import nova.api.ec2
+  from nova.api import manager
   from nova.api import openstack
   from nova.auth import users
   from nova.endpoint import cloud
@@ -80,7 +95,6 @@ Example::
 Docstrings
 ----------
 - [H401] Docstrings should not start with a space.
-- [H402] The first line of a docstring should end with punctuation.
 - [H403] Multi line docstrings should end on a new line.
 - [H404] Multi line docstrings should start without a leading new line.
 - [H405] Multi line docstrings should start with a one line summary followed
@@ -88,14 +102,11 @@ Docstrings
 
 Example::
 
-  """A one line docstring looks like this and ends in a period."""
-
-
   """A multi line docstring has a one-line summary, less than 80 characters.
 
   Then a new paragraph after a newline that explains in more detail any
   general information about the function, class or method. Example usages
-  are also great to have here if it is a complex class for function.
+  are also great to have here if it is a complex class or function.
 
   When writing the docstring for a class, an extra line should be placed
   after the closing quotations. For more in-depth explanations for these
@@ -138,8 +149,9 @@ Example::
   }
 
 
-- [H501] Do not use ``locals()`` for formatting strings, it is not clear as using
-   explicit dictionaries and can hide errors during refactoring.
+- [H501] Do not use ``locals()`` or ``self.__dict__`` for formatting strings,
+   it is not clear as using explicit dictionaries and can hide errors during
+   refactoring.
 
 Calling Methods
 ---------------
@@ -186,7 +198,7 @@ Example::
 
   Example::
 
-      msg = _("Missing parameter: %s") % ("flavor")
+      msg = _LE("Missing parameter: %s") % ("flavor")
       LOG.error(msg)
 
 - [H703] If you have multiple variables to place in the string, use keyword
@@ -194,8 +206,12 @@ Example::
 
   Example::
 
-      msg = _("The server with id %(s_id)s has no key %(m_key)s")
+      msg = _LE("The server with id %(s_id)s has no key %(m_key)s")
       LOG.error(msg % {"s_id": "1234", "m_key": "imageId"})
+
+.. seealso::
+
+   * `oslo.i18n Guidelines <http://docs.openstack.org/developer/oslo.i18n/guidelines.html>`__
 
 Python 3.x compatibility
 ------------------------
@@ -235,6 +251,19 @@ Python 3.x compatible before it can be is fully Python 3.x compatible, we have c
     @six.add_metaclass(Meta)
     class YourClass():
 
+- [H237] Don't use modules that were removed in Python 3. Removed module list:
+  http://python3porting.com/stdlib.html#removed-modules
+
+- [H238] Old style classes are deprecated and no longer available in Python 3
+  (they are converted to new style classes). In order to avoid any unwanted side
+  effects all classes should be declared using new style. See `the new-style
+  class documentation <https://www.python.org/doc/newstyle/>`_ for reference on
+  the differences.
+
+  Example::
+
+    class Foo(object):
+        pass
 
 Creating Unit Tests
 -------------------
@@ -314,17 +343,7 @@ OpenStack Licensing
 Commit Messages
 ---------------
 Using a common format for commit messages will help keep our git history
-readable. Follow these guidelines:
-
-- [H802] First, provide a brief summary of 50 characters or less.  Summaries
-  of greater then 72 characters will be rejected by the gate.
-
-- [H801] The first line of the commit message should provide an accurate
-  description of the change, not just a reference to a bug or
-  blueprint.
-
-- [H803] The first line of the commit message  must not end with a period
-  and must be followed by a single blank line.
+readable.
 
 For further information on constructing high quality commit messages,
 and how to split up commits into a series of changes, consult the

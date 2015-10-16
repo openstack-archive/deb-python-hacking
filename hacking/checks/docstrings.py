@@ -43,40 +43,6 @@ def hacking_docstring_start_space(physical_line, previous_logical, tokens):
 
 
 @core.flake8ext
-def hacking_docstring_one_line(physical_line, previous_logical, tokens):
-    r"""Check one line docstring end.
-
-    OpenStack HACKING guide recommendation for one line docstring:
-    A one line docstring looks like this and ends in punctuation.
-
-    Okay: def foo():\n    '''This is good.'''
-    Okay: def foo():\n    r'''This is good.'''
-    Okay: def foo():\n    '''This is good too!'''
-    Okay: def foo():\n    '''How about this?'''
-    Okay: def foo():\n    a = '''This is not a docstring'''
-    Okay: def foo():\n    pass\n    '''This is not a docstring'''
-    Okay: def foo():\n    pass\n    r'''This is not a docstring'''
-    Okay: class Foo:\n    pass\n    '''This is not a docstring'''
-    H402: def foo():\n    '''This is not'''
-    H402: def foo():\n    r'''This is not'''
-    H402: def foo():\n    '''Bad punctuation,'''
-    H402: def foo():\n    '''Bad punctuation:'''
-    H402: def foo():\n    '''Bad punctuation;'''
-    H402: class Foo:\n    '''Bad punctuation,'''
-    H402: class Foo:\n    r'''Bad punctuation,'''
-    """
-    docstring = is_docstring(tokens, previous_logical)
-    if docstring:
-        if '\n' in docstring:
-            # multi line docstring
-            return
-        line = physical_line.lstrip()
-        end = max([line[-4:-1] == i for i in END_DOCSTRING_TRIPLE])  # end
-        if line[-5] not in ['.', '?', '!']:
-            return end, "H402: one line docstring needs punctuation."
-
-
-@core.flake8ext
 def hacking_docstring_multiline_end(physical_line, previous_logical, tokens):
     r"""Check multi line docstring end.
 
@@ -85,13 +51,13 @@ def hacking_docstring_multiline_end(physical_line, previous_logical, tokens):
 
     Okay: '''foobar\nfoo\nbar\n'''
     Okay: def foo():\n    '''foobar\n\nfoo\nbar\n'''
-    Okay: class Foo:\n    '''foobar\n\nfoo\nbar\n'''
+    Okay: class Foo(object):\n    '''foobar\n\nfoo\nbar\n'''
     Okay: def foo():\n    a = '''not\na\ndocstring'''
     Okay: def foo():\n    a = '''not\na\ndocstring'''  # blah
     Okay: def foo():\n    pass\n'''foobar\nfoo\nbar\n   d'''
     H403: def foo():\n    '''foobar\nfoo\nbar\ndocstring'''
     H403: def foo():\n    '''foobar\nfoo\nbar\npretend raw: r'''
-    H403: class Foo:\n    '''foobar\nfoo\nbar\ndocstring'''\n\n
+    H403: class Foo(object):\n    '''foobar\nfoo\nbar\ndocstring'''\n\n
     """
     docstring = is_docstring(tokens, previous_logical)
     if docstring:
