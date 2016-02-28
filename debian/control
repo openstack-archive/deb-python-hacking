@@ -27,7 +27,7 @@ Build-Depends-Indep: pyflakes,
 Standards-Version: 3.9.6
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=openstack/python-hacking.git
 Vcs-Git: git://anonscm.debian.org/openstack/python-hacking.git
-Homepage: http://github.com/openstack-dev/hacking
+Homepage: https://github.com/openstack-dev/hacking
 
 Package: python-hacking
 Architecture: all
