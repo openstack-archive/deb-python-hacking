@@ -1,0 +1,9 @@
+Code-Review+2: Sean Dague <sean@dague.net>
+Code-Review+2: Doug Hellmann <doug@doughellmann.com>
+Workflow+1: Doug Hellmann <doug@doughellmann.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Fri, 21 Mar 2014 22:21:50 +0000
+Reviewed-on: https://review.openstack.org/82224
+Project: openstack/deb-python-hacking
+Branch: refs/heads/0.8.x
