@@ -1,6 +1,5 @@
 [gerrit]
 host=review.openstack.org
 port=29418
-project=openstack-dev/hacking.git
-defaultbranch=0.10.x
-
+project=openstack/deb-python-hacking.git
+defaultbranch=debian/newton
