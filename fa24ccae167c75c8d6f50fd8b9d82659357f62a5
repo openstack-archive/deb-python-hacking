@@ -1,0 +1,9 @@
+Code-Review+2: Julien Danjou <julien@danjou.info>
+Code-Review+2: Ian Cordasco <ian.cordasco@rackspace.com>
+Workflow+1: Ian Cordasco <ian.cordasco@rackspace.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Mon, 27 Jun 2016 12:51:32 +0000
+Reviewed-on: https://review.openstack.org/334198
+Project: openstack/deb-python-hacking
+Branch: refs/heads/master

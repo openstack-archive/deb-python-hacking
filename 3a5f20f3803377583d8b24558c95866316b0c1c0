@@ -1,0 +1,9 @@
+Code-Review+2: Ian Cordasco <ian.cordasco@rackspace.com>
+Code-Review+2: Davanum Srinivas (dims) <davanum@gmail.com>
+Workflow+1: Davanum Srinivas (dims) <davanum@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Tue, 09 Jun 2015 12:37:17 +0000
+Reviewed-on: https://review.openstack.org/185252
+Project: openstack/deb-python-hacking
+Branch: refs/heads/master

@@ -1,0 +1,9 @@
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Workflow+1: Clark Boylan <cboylan@sapwetik.org>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 13 May 2015 00:09:43 +0000
+Reviewed-on: https://review.openstack.org/182494
+Project: openstack/deb-python-hacking
+Branch: refs/heads/master

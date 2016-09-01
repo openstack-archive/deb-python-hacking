@@ -1,0 +1,9 @@
+Code-Review+2: Joe Gordon <joe.gordon0@gmail.com>
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Workflow+1: Monty Taylor <mordred@inaugust.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Sun, 30 Aug 2015 15:31:31 +0000
+Reviewed-on: https://review.openstack.org/217138
+Project: openstack/deb-python-hacking
+Branch: refs/heads/master

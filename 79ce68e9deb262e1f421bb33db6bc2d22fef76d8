@@ -1,0 +1,9 @@
+Code-Review+2: James Carey <jecarey@yerac.com>
+Code-Review+2: Joe Gordon <joe.gordon0@gmail.com>
+Workflow+1: Ian Cordasco <ian.cordasco@rackspace.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Mon, 25 Jan 2016 15:14:06 +0000
+Reviewed-on: https://review.openstack.org/270544
+Project: openstack/deb-python-hacking
+Branch: refs/heads/master

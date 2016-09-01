@@ -1,0 +1,9 @@
+Code-Review+2: Ian Cordasco <ian.cordasco@rackspace.com>
+Code-Review+2: Joe Gordon <joe.gordon0@gmail.com>
+Workflow+1: Joe Gordon <joe.gordon0@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Mon, 18 May 2015 03:55:07 +0000
+Reviewed-on: https://review.openstack.org/134052
+Project: openstack/deb-python-hacking
+Branch: refs/heads/master

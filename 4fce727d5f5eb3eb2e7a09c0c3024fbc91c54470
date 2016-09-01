@@ -1,0 +1,9 @@
+Code-Review+2: Sean Dague <sean@dague.net>
+Code-Review+2: Joe Gordon <joe.gordon0@gmail.com>
+Workflow+1: Joe Gordon <joe.gordon0@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Tue, 12 May 2015 23:34:33 +0000
+Reviewed-on: https://review.openstack.org/152108
+Project: openstack/deb-python-hacking
+Branch: refs/heads/master

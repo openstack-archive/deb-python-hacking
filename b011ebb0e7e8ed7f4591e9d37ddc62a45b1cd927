@@ -1,0 +1,11 @@
+Code-Review+2: Ian Cordasco <ian.cordasco@rackspace.com>
+Code-Review+1: Victor Stinner <vstinner@redhat.com>
+Code-Review+2: James Carey <jecarey@yerac.com>
+Code-Review+1: Dougal Matthews <dougal@redhat.com>
+Workflow+1: Ian Cordasco <ian.cordasco@rackspace.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 13 Apr 2016 14:40:50 +0000
+Reviewed-on: https://review.openstack.org/276500
+Project: openstack/deb-python-hacking
+Branch: refs/heads/master

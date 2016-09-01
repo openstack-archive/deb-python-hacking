@@ -1,0 +1,9 @@
+Code-Review+2: Ian Cordasco <ian.cordasco@rackspace.com>
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Workflow+1: Monty Taylor <mordred@inaugust.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Thu, 21 May 2015 14:30:40 +0000
+Reviewed-on: https://review.openstack.org/184332
+Project: openstack/deb-python-hacking
+Branch: refs/heads/master
