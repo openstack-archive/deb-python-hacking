@@ -2,21 +2,20 @@ Description: Allow greater versions for both pep8, flake8, pyflakes and mccabe
  Also support flake8 >= 2.2.2
 Author: Thomas Goirand <zigo@debian.org>
 Forwarded: not-needed
-Last-Update: 2015-09-18
+Last-Update: 2014-03-22
 
 --- a/requirements.txt
 +++ b/requirements.txt
 @@ -3,9 +3,9 @@
  # process, which may cause wedges in the gate later.
- pbr>=0.11,<2.0
+ pbr>=1.6 # Apache-2.0
  
--pep8==1.5.7
--pyflakes==0.8.1
--flake8==2.2.4
+-pep8==1.5.7 # MIT
+-pyflakes==0.8.1 # MIT
++pep8>=1.5.7 # MIT
++pyflakes>=0.8.1 # MIT
+ flake8<2.6.0,>=2.5.4 # MIT
 -mccabe==0.2.1 # MIT License
-+pep8>=1.5.7
-+pyflakes>=0.8.1
-+flake8>=2.2.2
 +mccabe>=0.2.1 # MIT License
  
- six>=1.7.0
+ six>=1.9.0 # MIT

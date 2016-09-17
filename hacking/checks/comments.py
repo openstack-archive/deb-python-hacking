@@ -16,7 +16,7 @@ import tokenize
 from hacking import core
 
 
-AUTHOR_TAG_RE = (re.compile("^\s*#\s*@?(a|A)uthor:"),
+AUTHOR_TAG_RE = (re.compile("^\s*#\s*@?(a|A)uthors?:"),
                  re.compile("^\.\.\s+moduleauthor::"))
 
 
@@ -162,8 +162,8 @@ under the License."""
     if stripped_apache2 in content:
         return True
     else:
-        print ("<license>!=<apache2>:\n'%s' !=\n'%s'" %
-               (content, stripped_apache2))
+        print("<license>!=<apache2>:\n'%s' !=\n'%s'" %
+              (content, stripped_apache2))
         return False
 
 

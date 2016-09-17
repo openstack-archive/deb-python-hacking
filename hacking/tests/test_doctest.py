@@ -37,6 +37,13 @@ class HackingTestCase(hacking.tests.TestCase):
     scenarios = file_cases
 
     def test_pep8(self):
+
+        # NOTE(jecarey): Add tests marked as off_by_default to enable testing
+        turn_on = set(['H106'])
+        if self.options.select:
+            turn_on.update(self.options.select)
+        self.options.select = tuple(turn_on)
+
         report = pep8.BaseReport(self.options)
         checker = pep8.Checker(lines=self.lines, options=self.options,
                                report=report)
@@ -84,7 +91,7 @@ def load_tests(loader, tests, pattern):
         for (lineno, (raw, (code, source))) in enumerate(_get_lines(check)):
             lines = [part.replace(r'\t', '\t') + '\n'
                      for part in source.split(r'\n')]
-            file_cases.append(("%s-line-%s" % (name, lineno),
+            file_cases.append(("%s-%s-line-%s" % (entry.name, name, lineno),
                               dict(lines=lines, raw=raw, options=options,
                                    code=code)))
     return testscenarios.load_tests_apply_scenarios(loader, tests, pattern)

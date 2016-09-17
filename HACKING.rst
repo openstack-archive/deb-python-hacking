@@ -1,3 +1,5 @@
+.. _StyleGuide:
+
 OpenStack Style Guidelines
 ==========================
 
@@ -12,20 +14,26 @@ more maintainable.
 Step 0
 ------
 
-- Step 1: Read http://www.python.org/dev/peps/pep-0008/
-- Step 2: Read http://www.python.org/dev/peps/pep-0008/ again
+- Step 1: Read `pep8`_
+- Step 2: Read `pep8`_ again
 - Step 3: Read on
 
+.. _`pep8`: http://www.python.org/dev/peps/pep-0008/
 
 General
 -------
 - [H903] Use only UNIX style newlines (``\n``), not Windows style (``\r\n``)
-- It is prefered to wrap long lines in parentheses and not a backslash
+- It is preferred to wrap long lines in parentheses and not a backslash
   for line continuation.
-- [H201] Do not write ``except:``, use ``except Exception:`` at the very least
-- [H101] Include your name with TODOs as in ``# TODO(yourname)``
-- [H105] Don't use author tags.
-- Do not shadow a built-in or reserved word. Example::
+- [H201] Do not write ``except:``, use ``except Exception:`` at the very least.
+  When catching an exception you should be as specific so you don't mistakenly
+  catch unexpected exceptions.
+- [H101] Include your name with TODOs as in ``# TODO(yourname)``. This makes
+  it easier to find out who the author of the comment was.
+- [H105] Don't use author tags. We use version control instead.
+- [H106] Don't put vim configuration in source files (off by default).
+- Do not shadow a built-in or reserved word. Shadowing built -in or reserved
+  words makes the code harder to understand. Example::
 
     def list():
         return [1, 2, 3]
@@ -41,19 +49,20 @@ General
 
 Imports
 -------
+
 - Do not import objects, only modules (*)
 - [H301] Do not import more than one module per line (*)
 - [H303] Do not use wildcard ``*`` import (*)
 - [H304] Do not make relative imports
-- [H306] Order your imports by the full module path
-- Organize your imports according to the `Import order
+- [H306] Alphabetically order your imports by the full module path.
+  Organize your imports according to the `Import order
   template`_ and `Real-world Import Order Examples`_ below.
 
 (*) exceptions are:
 
 - imports from ``migrate`` package
 - imports from ``sqlalchemy`` package
-- imports from ``oslo-incubator.openstack.common.gettextutils`` module
+- function imports from ``i18n`` module
 
 Import order template
 ^^^^^^^^^^^^^^^^^^^^^
@@ -89,6 +98,7 @@ Example::
   from nova.auth import users
   from nova.endpoint import cloud
   import nova.flags
+  from nova.i18n import _, _LC
   from nova import test
 
 
@@ -198,8 +208,8 @@ Example::
 
   Example::
 
-      msg = _LE("Missing parameter: %s") % ("flavor")
-      LOG.error(msg)
+      msg = _LE("Missing parameter: %s")
+      LOG.error(msg, "flavor")
 
 - [H703] If you have multiple variables to place in the string, use keyword
   parameters. This helps our translators reorder parameters when needed.
@@ -207,7 +217,7 @@ Example::
   Example::
 
       msg = _LE("The server with id %(s_id)s has no key %(m_key)s")
-      LOG.error(msg % {"s_id": "1234", "m_key": "imageId"})
+      LOG.error(msg, {"s_id": "1234", "m_key": "imageId"})
 
 .. seealso::
 
@@ -217,7 +227,7 @@ Python 3.x compatibility
 ------------------------
 OpenStack code should become Python 3.x compatible. That means all Python 2.x-only
 constructs or dependencies should be avoided. In order to start making code
-Python 3.x compatible before it can be is fully Python 3.x compatible, we have checks for Python 2.x-only constructs:
+Python 3.x compatible before it can be fully Python 3.x compatible, we have checks for Python 2.x-only constructs:
 
 - [H231] ``except``. Instead of::
 
@@ -290,24 +300,8 @@ exception possible should be used.
 
   Example::
 
-      self.assertRaises(exception.InstanceNotFound, db.instance_get_by_uuid,
-                            elevated, instance_uuid)
-
-
-oslo-incubator
-----------------
-
-A number of modules from oslo-incubator are imported into the project.
-
-These modules are "incubating" in oslo-incubator and are kept in sync
-with the help of oslo-incubator's update.py script. See:
-
-  https://wiki.openstack.org/wiki/Oslo#Incubation
-
-
-The copy of the code should never be directly modified here. Please
-always update oslo-incubator first and then run the script to copy
-the changes across.
+      with self.assertRaises(exception.InstanceNotFound):
+          db.instance_get_by_uuid(elevated, instance_uuid)
 
 
 OpenStack Trademark
