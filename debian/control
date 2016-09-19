@@ -6,7 +6,7 @@ Uploaders: Thomas Goirand <zigo@debian.org>,
            Clint Adams <clint@debian.org>,
 Build-Depends: debhelper (>= 9),
                dh-python,
-               openstack-pkg-tools,
+               openstack-pkg-tools (>= 52~),
                python-all,
                python-pbr (>= 1.8),
                python-setuptools,
@@ -26,9 +26,9 @@ Build-Depends-Indep: pyflakes,
                      python-testtools,
                      subunit,
                      testrepository,
-Standards-Version: 3.9.6
-Vcs-Browser: https://anonscm.debian.org/cgit/openstack/python-hacking.git/
-Vcs-Git: https://anonscm.debian.org/git/openstack/python-hacking.git
+Standards-Version: 3.9.8
+Vcs-Browser: https://git.openstack.org/cgit/openstack/deb-python-hacking
+Vcs-Git: https://git.openstack.org/openstack/deb-python-hacking
 Homepage: https://github.com/openstack-dev/hacking
 
 Package: python-hacking

@@ -10,6 +10,10 @@ python-hacking (0.11.0-1) experimental; urgency=medium
   * New upstream release.
   * Fixed (build-)depends for this release.
   * Import flake8-legacy.patch from Ubuntu.
+  * Using OpenStack's Gerrit as VCS URLs.
+  * Using pkgos-dh_auto_{install,test} from openstack-pkg-tools >= 52~.
+  * Fixed debian/copyright ordering.
+  * Standards-Version: 3.9.8 (no change).
 
  -- Thomas Goirand <zigo@debian.org>  Sat, 17 Sep 2016 23:56:00 +0200
 
