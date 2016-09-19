@@ -1,12 +1,7 @@
 #!/usr/bin/make -f
 
-PYTHONS:=$(shell pyversions -vr)
-PYTHON3S:=$(shell py3versions -vr)
-
 UPSTREAM_GIT := https://github.com/openstack-dev/hacking.git
 include /usr/share/openstack-pkg-tools/pkgos.make
-
-export OSLO_PACKAGE_VERSION=$(VERSION)
 
 export http_proxy=127.0.0.1:9
 export https_proxy=127.0.0.1:9
@@ -15,14 +10,10 @@ export https_proxy=127.0.0.1:9
 	dh $@ --buildsystem=python_distutils --with python2,python3,sphinxdoc
 
 override_dh_auto_install:
-	set -e && for pyvers in $(PYTHONS); do \
-		python$$pyvers setup.py install --install-layout=deb \
-			--root $(CURDIR)/debian/python-hacking; \
-	done
-	set -e && for pyvers in $(PYTHON3S); do \
-		python$$pyvers setup.py install --install-layout=deb \
-			--root $(CURDIR)/debian/python3-hacking; \
-	done
+	pkgos-dh_auto_install
+
+override_dh_python3:
+	dh_python3 --shebang=/usr/bin/python3
 
 override_dh_sphinxdoc:
 ifeq (,$(findstring nodocs, $(DEB_BUILD_OPTIONS)))
@@ -32,14 +23,7 @@ endif
 
 override_dh_auto_test:
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
-	rm -rf .testrepository
-	testr init
-	set -e && \
-		TEMP_REZ=`mktemp -t` && \
-		PYTHONPATH=$(CURDIR) testr run --subunit | tee $$TEMP_REZ | subunit2pyunit || true ; \
-		cat $$TEMP_REZ | subunit-filter -s --no-passthrough | subunit-stats || true ; \
-		rm -f $$TEMP_REZ ;
-	testr slowest
+	pkgos-dh_auto_test
 endif
 
 override_dh_clean:
