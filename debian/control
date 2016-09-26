@@ -33,8 +33,8 @@ Build-Depends-Indep: pyflakes,
                      subunit,
                      testrepository,
 Standards-Version: 3.9.8
-Vcs-Browser: https://git.openstack.org/cgit/openstack/deb-python-hacking
-Vcs-Git: https://git.openstack.org/openstack/deb-python-hacking
+Vcs-Browser: https://git.openstack.org/cgit/openstack/deb-python-hacking?h=debian%2Fnewton
+Vcs-Git: https://git.openstack.org/openstack/deb-python-hacking -b debian/newton
 Homepage: https://github.com/openstack-dev/hacking
 
 Package: python-hacking
