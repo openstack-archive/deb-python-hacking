@@ -1,0 +1,8 @@
+Code-Review+2: Ian Cordasco <sigmavirus24@gmail.com>
+Workflow+1: Ian Cordasco <sigmavirus24@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Tue, 06 Dec 2016 17:53:46 +0000
+Reviewed-on: https://review.openstack.org/389871
+Project: openstack/deb-python-hacking
+Branch: refs/heads/master
