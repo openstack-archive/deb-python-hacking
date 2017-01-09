@@ -1,0 +1,10 @@
+Code-Review+2: Julien Danjou <julien@danjou.info>
+Code-Review+1: Dirk Mueller <dirk@dmllr.de>
+Code-Review+2: Ian Cordasco <sigmavirus24@gmail.com>
+Workflow+1: Ian Cordasco <sigmavirus24@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Fri, 06 Jan 2017 00:54:00 +0000
+Reviewed-on: https://review.openstack.org/416114
+Project: openstack/deb-python-hacking
+Branch: refs/heads/master
