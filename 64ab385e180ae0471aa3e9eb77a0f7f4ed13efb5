@@ -1,0 +1,10 @@
+Code-Review+2: Julien Danjou <julien@danjou.info>
+Code-Review+1: Rico Lin <rico.lin.guanyu@gmail.com>
+Code-Review+2: Matthew Treinish <mtreinish@kortar.org>
+Workflow+1: Matthew Treinish <mtreinish@kortar.org>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Thu, 02 Mar 2017 14:38:05 +0000
+Reviewed-on: https://review.openstack.org/440153
+Project: openstack/deb-python-hacking
+Branch: refs/heads/0.10.x
