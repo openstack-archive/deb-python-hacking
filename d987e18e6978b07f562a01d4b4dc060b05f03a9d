@@ -1,0 +1,10 @@
+Code-Review+2: Julien Danjou <julien@danjou.info>
+Code-Review+1: Rico Lin <rico.lin.guanyu@gmail.com>
+Code-Review+2: Sean Dague <sean@dague.net>
+Workflow+1: Sean Dague <sean@dague.net>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Thu, 02 Mar 2017 16:53:53 +0000
+Reviewed-on: https://review.openstack.org/440154
+Project: openstack/deb-python-hacking
+Branch: refs/heads/0.9.x
